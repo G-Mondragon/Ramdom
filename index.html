@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Me das permiso para salir?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .question {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px; /* Reducido para dar espacio a la imagen */
+            font-weight: 600;
+        }
+
+        /* ESTILOS PARA LA IMAGEN (ESTOS FALTABAN EN TU CÓDIGO) */
+        .image-container {
+            margin: 20px 0 25px 0; /* Margen arriba y abajo de la imagen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilos para imagen real */
+        .main-image {
+            max-width: 120px; /* Tamaño más pequeño para que quepa bien */
+            max-height: 120px; 
+            width: 100%; /* Responsive */
+            height: auto; /* Mantiene proporción */
+            border-radius: 15px; /* Bordes redondeados */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Sombra suave */
+            object-fit: cover; /* Ajusta la imagen sin deformarla */
+            transition: transform 0.3s ease; /* Animación suave */
+        }
+
+        .main-image:hover {
+            transform: scale(1.05); /* Efecto de zoom al hacer hover */
+        }
+
+        /* Estilos para placeholder de imagen */
+        .image-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder:hover {
+            border-color: #999;
+            background: linear-gradient(45deg, #e8e8e8, #d8d8d8);
+        }
+
+        .placeholder-text {
+            font-size: 11px;
+            margin-top: 8px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .success-message {
+            font-size: 28px;
+            color: #4CAF50;
+            font-weight: bold;
+            display: none;
+            animation: celebration 0.8s ease-in-out;
+        }
+
+        .emoji {
+            font-size: 60px;
+            margin: 20px 0;
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+            position: absolute;
+            transition: all 0.1s ease; /* Transición más rápida */
+        }
+
+        .btn-no:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3);
+        }
+
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            top: 0;
+            left: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            color: #ff69b4;
+            opacity: 0;
+            animation: float-up 3s ease-out forwards;
+        }
+
+        @keyframes celebration {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .question {
+                font-size: 20px;
+            }
+            
+            .success-message {
+                font-size: 24px;
+            }
+            
+            .emoji {
+                font-size: 50px;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 16px;
+                min-width: 80px;
+            }
+            
+            .buttons {
+                gap: 15px;
+            }
+
+            /* Imagen responsive para tablets */
+            .main-image,
+            .image-placeholder {
+                max-width: 100px; /* Más pequeño para tablets */
+                max-height: 100px;
+                width: 100px;
+                height: 100px;
+            }
+
+            .image-placeholder {
+                font-size: 35px;
+            }
+
+            .placeholder-text {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+            }
+            
+            .question {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+            
+            .success-message {
+                font-size: 22px;
+            }
+            
+            .emoji {
+                font-size: 40px;
+                margin: 15px 0;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                min-width: 70px;
+            }
+
+            /* Imagen más pequeña en móviles */
+            .image-container {
+                margin: 15px 0 20px 0;
+            }
+
+            .main-image,
+            .image-placeholder {
+                max-width: 80px; /* Aún más pequeño para móviles */
+                max-height: 80px;
+                width: 80px;
+                height: 80px;
+            }
+
+            .image-placeholder {
+                font-size: 30px;
+            }
+
+            .placeholder-text {
+                font-size: 9px;
+                margin-top: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="initial-content">
+            <div class="question">Me das permiso para salir? 🥺🙏</div>
+            
+            <!-- Contenedor de la imagen -->
+            <div class="image-container">
+                <!-- Tu imagen actual -->
+                <img src="/imges/image.png" alt="imagen" class="main-image"> 
+                
+                <!-- Placeholder comentado -->
+                <!--<div class="image-placeholder">
+                    👫<br>
+                    <span class="placeholder-text">Aquí va tu imagen</span>
+                </div>-->
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-yes" onclick="handleYes()">SÍ</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO</button>
+            </div>
+        </div>
+        
+        <div id="success-content" class="success-message">
+            <span class="emoji">🎉</span>
+            Gracias Amorcito 💋❣️
+            <span class="emoji"></span>
+        </div>
+    </div>
+    
+    <div class="hearts" id="hearts"></div>
+
+    <script>
+        // Variable para rastrear si el botón NO ya se ha movido
+        let noButtonMoved = false;
+        
+        /**
+         * Función que mueve el botón NO a una posición aleatoria en la pantalla
+         * Se ejecuta cuando el usuario hace hover o toca el botón NO
+         */
+        function moveButton() {
+            // Obtener referencia al botón NO
+            const noBtn = document.getElementById('noBtn');
+            const container = document.querySelector('.container');
+            
+            // Obtener las dimensiones actuales de la ventana del navegador
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            
+            // Obtener las dimensiones del botón para evitar que se salga de la pantalla
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            // Calcular las posiciones máximas donde puede aparecer el botón
+            // Se resta el ancho/alto del botón y un margen de 20px para evitar cortes
+            const maxX = windowWidth - btnWidth - 20;
+            const maxY = windowHeight - btnHeight - 20;
+            
+            // Generar posiciones aleatorias dentro de los límites calculados
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            // Aplicar las nuevas coordenadas al botón
+            noBtn.style.position = 'fixed'; // Posición fija respecto a la ventana
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.zIndex = '1000'; // Z-index alto para estar encima de otros elementos
+            
+            // Añadir rotación aleatoria para hacer el movimiento más divertido y dinámico
+            const rotation = Math.random() * 360;
+            noBtn.style.transform = `rotate(${rotation}deg)`;
+            
+            // Marcar que el botón se ha movido (para ocultarlo después si se presiona SÍ)
+            noButtonMoved = true;
+        }
+        
+        /**
+         * Función que maneja el clic en el botón SÍ
+         * Oculta el contenido inicial y muestra el mensaje de éxito
+         */
+        function handleYes() {
+            // Ocultar el contenido inicial (pregunta y botones)
+            document.getElementById('initial-content').style.display = 'none';
+            
+            // Mostrar el mensaje de éxito
+            document.getElementById('success-content').style.display = 'block';
+            
+            // Si el botón NO se movió por la pantalla, ocultarlo completamente
+            if (noButtonMoved) {
+                document.getElementById('noBtn').style.display = 'none';
+            }
+            
+            // Iniciar la animación de corazones flotantes
+            createHearts();
+        }
+        
+        /**
+         * Función que crea una animación de corazones flotantes
+         * Se ejecuta cuando el usuario presiona SÍ
+         */
+        function createHearts() {
+            // Obtener el contenedor donde aparecerán los corazones
+            const heartsContainer = document.getElementById('hearts');
+            
+            // Crear 15 corazones con delay progresivo para efecto escalonado
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    // Crear elemento div para cada corazón
+                    const heart = document.createElement('div');
+                    heart.className = 'heart'; // Aplicar clase CSS con animación
+                    heart.innerHTML = '❤️'; // Emoji de corazón
+                    
+                    // Posicionar cada corazón en una ubicación horizontal aleatoria
+                    // en la parte inferior de la pantalla
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.bottom = '0px';
+                    
+                    // Añadir el corazón al contenedor
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remover el corazón del DOM después de que termine la animación (3 segundos)
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 3000);
+                }, i * 200); // Delay de 200ms entre cada corazón
+            }
+        }
+        
+        // EVENT LISTENERS PARA COMPATIBILIDAD MÓVIL Y DESKTOP
+        
+        /**
+         * Evento táctil para dispositivos móviles
+         * Previene el comportamiento predeterminado y mueve el botón
+         */
+        document.getElementById('noBtn').addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Evitar comportamientos no deseados del navegador
+            moveButton();
+        });
+        
+        /**
+         * Evento de clic para todos los dispositivos
+         * Previene el clic normal y mueve el botón en su lugar
+         */
+        document.getElementById('noBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // Evitar que el botón actúe como botón normal
+            moveButton();
+        });
+    </script>
+</body>
+</html>
